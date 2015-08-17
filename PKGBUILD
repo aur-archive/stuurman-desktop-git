@@ -1,0 +1,39 @@
+#Maintainer : Vadim Ushakov <igeekless [at] gmail [dot] com>
+
+pkgname=stuurman-desktop-git
+pkgver=201507291347
+pkgrel=1
+pkgdesc="A desktop manager."
+arch=('i686' 'x86_64')
+url="http://make-linux.org/"
+license=('GPL')
+depends=('libsde-utils-x11-git' 'libsmfm-gtk2-git' 'sde-reverse-meta-git')
+makedepends=('git' 'intltool' 'pkg-config' 'automake')
+provides=('stuurman-desktop')
+conflicts=('stuurman-desktop')
+install=stuurman-desktop.install
+
+source=('git+git://make-linux.org/sde/stuurman-desktop.git')
+md5sums=('SKIP')
+
+_gitname="stuurman-desktop"
+
+pkgver() {
+  date +%Y%m%d%H%M
+}
+
+build() {
+    cd "${_gitname}"
+
+    ./autogen.sh
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --enable-silent-rules
+    make
+}
+
+package() {
+    cd "${_gitname}"
+    make DESTDIR="$pkgdir" install
+}
